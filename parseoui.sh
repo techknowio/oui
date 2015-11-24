@@ -16,10 +16,12 @@ touch oui.md5
 FIRST=`cat oui.md5`
 SECOND=`cat oui-new.md5`
 
-if [ "$FIRST" -eq "$SECOND" ]; then
+if [ "$FIRST" = "$SECOND" ]; then
     echo "OUI is up to date"
     exit
 fi
+
+mv oui-new.txt oui.txt
 
 echo "DROP table if exists $TABLE;" > oui.sql
 echo "create table oui (base16 varchar(25), name text);">> oui.sql
@@ -39,3 +41,5 @@ done
 if [ "$EXECUTE" = "1" ]; then
     mysql -u $MYSQLUSERNAME -p$MYSQLPASSWORD $MYSQLDB < oui.sql
 fi
+
+mv oui-new.md5 oui.md5
